@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>随心笔记 ✦ FreeMind 1.00 — 你的 Windows 第二大脑</title>
+<meta name="description" content="随心笔记 FreeMind：把笔记、计划、通讯录和 AI 收进一张桌面。本地优先、每日备份、无订阅，Windows 10/11 一键安装。">
+<style>
+:root{
+  --bg:#070B14;
+  --bg-2:#0B1220;
+  --panel:rgba(15,23,42,.72);
+  --panel-solid:#101828;
+  --line:rgba(148,163,184,.18);
+  --line-strong:rgba(148,163,184,.30);
+  --text:#E6EDF7;
+  --muted:#9FB0C6;
+  --emerald:#34D399;
+  --cyan:#22D3EE;
+  --violet:#A78BFA;
+  --amber:#FBBF24;
+  --radius:18px;
+  --font:"Microsoft YaHei","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  line-height:1.7;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(700px 500px at 12% -5%, rgba(52,211,153,.16), transparent 65%),
+    radial-gradient(760px 520px at 92% 8%, rgba(167,139,250,.16), transparent 65%),
+    radial-gradient(900px 700px at 50% 110%, rgba(34,211,238,.08), transparent 70%);
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{width:min(1180px,92vw);margin:0 auto}
+
+/* ── Nav ── */
+nav{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(18px);
+  background:rgba(7,11,20,.72);
+  border-bottom:1px solid transparent;
+  transition:border-color .25s, background .25s;
+}
+nav.scrolled{border-bottom-color:var(--line);background:rgba(7,11,20,.9)}
+.nav-inner{display:flex;align-items:center;gap:28px;height:68px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;letter-spacing:.2px}
+.logo .mark{
+  width:26px;height:26px;border-radius:9px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--emerald),var(--cyan));
+  color:#04121a;font-size:14px;font-weight:900;
+  box-shadow:0 0 22px rgba(52,211,153,.35);
+}
+.nav-links{display:flex;gap:22px;margin-left:auto;font-size:14px;color:var(--muted)}
+.nav-links a{transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  margin-left:8px;padding:9px 18px;border-radius:999px;font-size:13.5px;font-weight:700;
+  color:#04121a;background:linear-gradient(135deg,var(--emerald),#6EE7B7);
+  box-shadow:0 6px 24px rgba(52,211,153,.28);
+  transition:transform .2s, box-shadow .2s;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(52,211,153,.4)}
+
+/* ── Hero ── */
+.hero{padding:76px 0 30px}
+.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center}
+.badge{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:7px 14px;border-radius:999px;font-size:12.5px;color:#C7F9E5;
+  background:rgba(52,211,153,.10);border:1px solid rgba(52,211,153,.28);
+}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--emerald);box-shadow:0 0 10px var(--emerald)}
+h1{
+  margin:22px 0 20px;font-size:clamp(38px,4.6vw,62px);line-height:1.12;
+  letter-spacing:-1.2px;font-weight:800;
+}
+.grad{
+  background:linear-gradient(105deg,var(--emerald) 0%,var(--cyan) 45%,var(--violet) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.lede{font-size:17px;color:var(--muted);max-width:560px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin:32px 0 22px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;padding:14px 26px;border-radius:14px;
+  font-size:15px;font-weight:700;transition:transform .2s, box-shadow .2s, background .2s;
+}
+.btn-primary{
+  color:#04121a;background:linear-gradient(135deg,var(--emerald),#6EE7B7);
+  box-shadow:0 10px 32px rgba(52,211,153,.30);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(52,211,153,.42)}
+.btn-ghost{border:1px solid var(--line-strong);color:var(--text);background:rgba(255,255,255,.02)}
+.btn-ghost:hover{background:rgba(255,255,255,.06);transform:translateY(-2px)}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--muted)}
+.hero-meta span{padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:rgba(15,23,42,.5)}
+
+.window{
+  position:relative;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(148,163,184,.28);
+  background:#0A111E;
+  box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(52,211,153,.10), 0 0 60px rgba(52,211,153,.14);
+  transform:perspective(1400px) rotateY(-3deg) rotateX(1.2deg);
+}
+.window::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 24%);
+}
+.win-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(148,163,184,.14)}
+.win-bar i{width:9px;height:9px;border-radius:50%;display:block}
+.win-bar i:nth-child(1){background:#F87171}.win-bar i:nth-child(2){background:#FBBF24}.win-bar i:nth-child(3){background:#34D399}
+.win-title{margin-left:8px;font-size:11.5px;color:#8EA1B8;letter-spacing:.2px}
+.window img{width:100%;height:auto}
+.window-glow{position:absolute;inset:-30% -20%;z-index:-1;background:radial-gradient(circle at 60% 40%,rgba(52,211,153,.18),transparent 60%)}
+
+/* ── Stats ── */
+.stats{
+  margin:56px 0 10px;display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--line);border-radius:var(--radius);
+  background:linear-gradient(180deg,rgba(20,28,46,.75),rgba(11,18,32,.55));
+  overflow:hidden;
+}
+.stat{padding:24px 26px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-size:30px;line-height:1.2;letter-spacing:-.5px}
+.stat span{font-size:12.5px;color:var(--muted)}
+.stat b em{font-style:normal;font-size:15px;color:var(--emerald);margin-left:2px}
+
+/* ── Sections ── */
+section{padding:86px 0}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:2.5px;
+  color:var(--emerald);text-transform:uppercase;font-weight:700;
+}
+.eyebrow::before{content:"✦";font-size:13px}
+h2{margin:14px 0 14px;font-size:clamp(30px,3.4vw,44px);line-height:1.18;letter-spacing:-.6px}
+.section-lede{color:var(--muted);max-width:680px;font-size:16px}
+.section-head{margin-bottom:44px}
+
+/* feature grid */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{
+  padding:26px 24px;border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(20,28,46,.72),rgba(12,19,33,.55));
+  transition:transform .25s, border-color .25s, box-shadow .25s;
+}
+.card:hover{transform:translateY(-4px);border-color:rgba(52,211,153,.34);box-shadow:0 18px 44px rgba(0,0,0,.32)}
+.ico{
+  width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:19px;
+  background:rgba(52,211,153,.10);border:1px solid rgba(52,211,153,.26);margin-bottom:18px;
+}
+.ico.v{background:rgba(167,139,250,.10);border-color:rgba(167,139,250,.26)}
+.ico.c{background:rgba(34,211,238,.10);border-color:rgba(34,211,238,.26)}
+.card h3{font-size:18px;margin-bottom:8px;letter-spacing:.1px}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.8}
+
+/* showcase */
+.showcase{display:grid;grid-template-columns:1fr 1fr;gap:58px;align-items:center;padding:64px 0;border-top:1px solid var(--line)}
+.showcase:first-of-type{border-top:0}
+.showcase.rev .visual{order:2}
+.showcase h3{font-size:clamp(24px,2.5vw,32px);line-height:1.24;margin-bottom:16px;letter-spacing:-.3px}
+.showcase .kicker{font-size:12px;letter-spacing:2px;color:var(--cyan);font-weight:700;margin-bottom:10px}
+.showcase p{color:var(--muted);font-size:14.5px}
+.points{list-style:none;margin-top:24px;display:grid;gap:14px}
+.points li{display:flex;gap:12px;font-size:14px;color:#CBD8E8}
+.points li::before{
+  content:"✓";flex:none;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;
+  font-size:12px;font-weight:900;color:#04121a;background:linear-gradient(135deg,var(--emerald),#6EE7B7);
+  margin-top:2px;
+}
+.points b{color:var(--text);font-weight:700}
+.shot{
+  border-radius:16px;overflow:hidden;border:1px solid rgba(148,163,184,.24);
+  background:#0A111E;box-shadow:0 24px 60px rgba(0,0,0,.45);
+}
+.shot img{width:100%}
+.shot-cap{margin-top:12px;font-size:11.5px;color:#7F90A6;letter-spacing:.3px;text-align:right}
+.stack{display:grid;gap:20px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.duo .shot{box-shadow:0 16px 40px rgba(0,0,0,.38)}
+
+/* small feature tiles inside showcase */
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px}
+.mini{
+  padding:15px 16px;border-radius:12px;border:1px solid var(--line);
+  background:rgba(15,23,42,.55);font-size:13px;
+}
+.mini b{display:block;font-size:13.5px;margin-bottom:3px;color:var(--text)}
+.mini span{color:var(--muted);font-size:12px}
+
+/* AI panel block */
+.ai-band{
+  margin-top:8px;padding:34px;border-radius:22px;border:1px solid rgba(167,139,250,.22);
+  background:
+    radial-gradient(600px 300px at 10% 0%,rgba(167,139,250,.14),transparent 60%),
+    radial-gradient(600px 300px at 95% 100%,rgba(52,211,153,.12),transparent 60%),
+    rgba(13,20,34,.7);
+}
+.ai-band .shot{border-color:rgba(167,139,250,.22)}
+
+/* themes */
+.themes{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.theme-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);font-size:12.5px;color:var(--muted);background:rgba(15,23,42,.5)}
+.theme-pill i{width:11px;height:11px;border-radius:50%;display:block;box-shadow:0 0 10px rgba(0,0,0,.4)}
+
+/* security */
+.security{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:center}
+.shield{
+  position:relative;width:280px;height:310px;margin:0 auto;
+  display:grid;place-items:center;
+}
+.shield .ring{
+  position:absolute;inset:0;border-radius:46% 46% 54% 54%/40% 40% 60% 60%;
+  border:1px solid rgba(52,211,153,.4);
+  background:radial-gradient(circle at 50% 40%,rgba(52,211,153,.18),rgba(34,211,238,.05) 55%,transparent 70%);
+  box-shadow:0 0 70px rgba(52,211,153,.18) inset,0 0 50px rgba(52,211,153,.12);
+}
+.shield .ring:nth-child(2){inset:24px;opacity:.5;transform:rotate(10deg)}
+.shield .glyph{font-size:88px;filter:drop-shadow(0 10px 30px rgba(52,211,153,.35))}
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sec{padding:18px;border-radius:14px;border:1px solid var(--line);background:rgba(15,23,42,.55)}
+.sec b{display:block;font-size:14px;margin-bottom:4px}
+.sec span{font-size:12.5px;color:var(--muted)}
+
+/* download */
+.download-card{
+  padding:44px;border-radius:24px;border:1px solid rgba(52,211,153,.26);
+  background:
+    radial-gradient(700px 300px at 0% 0%,rgba(52,211,153,.14),transparent 62%),
+    radial-gradient(700px 300px at 100% 100%,rgba(34,211,238,.10),transparent 62%),
+    rgba(12,19,33,.82);
+  display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start;
+}
+.dl-title{font-size:clamp(26px,3vw,36px);line-height:1.2;letter-spacing:-.4px;margin-bottom:12px}
+.dl-sub{color:var(--muted);font-size:14.5px}
+.dl-meta{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 26px}
+.dl-meta span{font-size:12px;color:#C7F9E5;background:rgba(52,211,153,.09);border:1px solid rgba(52,211,153,.22);padding:6px 11px;border-radius:999px}
+.hash{
+  margin-top:18px;padding:12px 14px;border-radius:11px;border:1px solid var(--line);
+  background:rgba(7,11,20,.6);font-family:Consolas,monospace;font-size:11px;color:#9FB0C6;
+  display:flex;align-items:center;gap:10px;justify-content:space-between;word-break:break-all;
+}
+.hash button{
+  flex:none;padding:6px 10px;border-radius:7px;border:1px solid var(--line-strong);
+  background:rgba(255,255,255,.04);color:#CBD8E8;font-size:11px;cursor:pointer;font-family:var(--font);
+}
+.hash button:hover{background:rgba(255,255,255,.08)}
+.req{list-style:none;display:grid;gap:11px;font-size:13px;color:var(--muted)}
+.req li{display:flex;gap:10px}
+.req li::before{content:"•";color:var(--emerald);font-weight:900}
+.steps{counter-reset:s;display:grid;gap:12px;margin-top:18px}
+.steps li{list-style:none;counter-increment:s;display:flex;gap:12px;font-size:13px;color:#CBD8E8}
+.steps li::before{
+  content:counter(s);flex:none;width:24px;height:24px;border-radius:8px;display:grid;place-items:center;
+  background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.28);color:var(--emerald);font-size:11px;font-weight:800;
+}
+.note{
+  margin-top:20px;padding:12px 14px;border-radius:10px;font-size:12px;color:#FDE68A;
+  background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.18);line-height:1.7;
+}
+
+/* FAQ */
+.faq{display:grid;gap:10px;max-width:900px;margin:0 auto}
+details{
+  border:1px solid var(--line);border-radius:14px;background:rgba(15,23,42,.5);
+  padding:0 20px;transition:border-color .2s;
+}
+details[open]{border-color:rgba(52,211,153,.26)}
+summary{
+  cursor:pointer;list-style:none;padding:17px 0;font-size:14.5px;font-weight:600;
+  display:flex;justify-content:space-between;align-items:center;gap:18px;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--emerald);font-size:18px;font-weight:400;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 0 18px;font-size:13.5px;color:var(--muted);line-height:1.85}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0 54px;color:#7F90A6;font-size:12.5px}
+.foot{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between}
+.foot .brand{display:flex;align-items:center;gap:9px;color:#CBD8E8;font-weight:600}
+.foot-links{display:flex;gap:18px}
+.foot a:hover{color:var(--text)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .window{transform:none;max-width:760px}
+  .window-glow{display:none}
+  .hero-grid>div{min-width:0}
+  .cards{grid-template-columns:1fr 1fr}
+  .showcase{grid-template-columns:1fr;gap:32px;padding:52px 0}
+  .showcase.rev .visual{order:0}
+  .security{grid-template-columns:1fr;gap:34px}
+  .download-card{grid-template-columns:1fr;padding:32px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line)}
+  .nav-links{display:none}
+}
+@media (max-width:640px){
+  .hero{padding:48px 0 18px}
+  section{padding:60px 0}
+  .cards{grid-template-columns:1fr}
+  .duo{grid-template-columns:1fr}
+  .sec-grid{grid-template-columns:1fr}
+  .mini-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  .stat{border-right:0;border-bottom:1px solid var(--line)}
+  .stat:last-child{border-bottom:0}
+  .download-card{padding:26px 20px}
+  .hash{flex-direction:column;align-items:flex-start}
+  .nav-inner{height:62px}
+  .nav-cta{padding:8px 14px;font-size:12.5px}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top"><span class="mark">✦</span> 随心笔记 <span style="color:#7F90A6;font-weight:400;font-size:12px;margin-left:2px">FreeMind</span></a>
+    <div class="nav-links">
+      <a href="#features">功能</a>
+      <a href="#notes">笔记</a>
+      <a href="#plan">计划</a>
+      <a href="#contacts">通讯录</a>
+      <a href="#ai">AI</a>
+      <a href="#security">安全</a>
+      <a href="#faq">FAQ</a>
+      <a href="manual.html">手册</a>
+    </div>
+    <a class="nav-cta" href="#download">下载 1.00</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="badge"><span class="dot"></span> v1.00 初版 · Windows 10 / 11</div>
+        <h1>把想法、计划、人脉<br>和 AI <span class="grad">收进一张桌面</span></h1>
+        <p class="lede">随心笔记 FreeMind 是一个本地优先的 Windows 笔记与工作台：写下的每一句话，都能连到任务、联系人和下一步行动。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#download">⬇ 下载安装包</a>
+          <a class="btn btn-ghost" href="#features">看看能做什么 →</a>
+        </div>
+        <div class="hero-meta">
+          <span>本地 SQLite</span><span>每日自动备份</span><span>无订阅</span><span>安装即用</span>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div class="window-glow"></div>
+        <div class="window">
+          <div class="win-bar"><i></i><i></i><i></i><span class="win-title">随心笔记 · 使用手册</span></div>
+          <img src="screenshots/01_notes_preview.png" alt="随心笔记编辑器界面：分类、笔记列表与富文本预览">
+        </div>
+      </div>
+    </div>
+
+    <div class="stats reveal">
+      <div class="stat"><b>8<em>+</em></b><span>笔记 / 计划 / 人脉 / AI 模块</span></div>
+      <div class="stat"><b>7<em>份</em></b><span>每日备份自动保留</span></div>
+      <div class="stat"><b>5<em>套</em></b><span>主题，深色到暖阳</span></div>
+      <div class="stat"><b>0<em>元</em></b><span>订阅费，本地功能全开放</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">One workspace</div>
+      <h2>不是六个 App，<br>是一个能互相引用的工作台</h2>
+      <p class="section-lede">笔记、待办、通讯录共用同一个本地数据库。写会议纪要时能带出参会人，建待办时能挂回原笔记，AI 也能读到这些上下文。</p>
+    </div>
+    <div class="cards">
+      <div class="card reveal"><div class="ico">✍</div><h3>富文本笔记</h3><p>18 色字体、5 色高亮、表格、图片、代码块与 Markdown；编辑与预览一键切换，自动保存。</p></div>
+      <div class="card reveal"><div class="ico c">⌘</div><h3>分类与双向链接</h3><p>分类树、彩色标签、[[双向链接]] 与反链面板；版本历史随时回看，误删进回收站。</p></div>
+      <div class="card reveal"><div class="ico v">◷</div><h3>计划工作区</h3><p>待办、日历（农历 + 节气）、倒数日、习惯打卡、番茄钟，五个视图同一套数据。</p></div>
+      <div class="card reveal"><div class="ico c">☰</div><h3>通讯录</h3><p>部门 / 项目 / 收藏筛选，组织架构树、生日提醒、最近互动，vCard / CSV 导入导出。</p></div>
+      <div class="card reveal"><div class="ico v">✦</div><h3>AI 助手</h3><p>聊天、整理、报告、Agent 四种模式；能搜索笔记、读联系人、建待办，本地 Ollama 或在线模型。</p></div>
+      <div class="card reveal"><div class="ico">⛨</div><h3>本地与安全</h3><p>SQLite 本地存储、每日备份、笔记版本、回收站、应用锁与整库加密，数据始终在你自己手里。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="notes" style="padding-top:20px">
+  <div class="wrap">
+    <div class="showcase">
+      <div class="visual reveal">
+        <div class="shot"><img src="screenshots/01_notes_preview.png" alt="富文本笔记编辑与预览"></div>
+        <div class="shot-cap">预览模式 · 三栏布局 · 阅读列居中</div>
+      </div>
+      <div class="reveal">
+        <div class="kicker">WRITE</div>
+        <h3>写作，不该被工具打断</h3>
+        <p>工具栏齐全但不喧宾夺主。输入即自动保存，切到预览就是干净的阅读页；长文有目录、进度条和回到顶部。</p>
+        <ul class="points">
+          <li><span><b>富文本 + Markdown</b>：标题、列表、引用、代码块、表格、图片与分割线。</span></li>
+          <li><span><b>组织方式</b>：分类树、彩色标签、置顶 / 归档、批量管理。</span></li>
+          <li><span><b>双向链接</b>：用 [[笔记名]] 建立关联，反链自动汇总。</span></li>
+          <li><span><b>导出与版本</b>：一键导出 HTML 到 data/exports，版本历史可回滚。</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="showcase rev" id="plan">
+      <div class="visual reveal">
+        <div class="stack">
+          <div class="shot"><img src="screenshots/02_plan_todo.png" alt="待办清单：工作分类、优先级与截止日期"></div>
+          <div class="shot"><img src="screenshots/03_plan_calendar.png" alt="日历视图：农历与二十四节气"></div>
+        </div>
+        <div class="shot-cap">工作清单 · 农历日历</div>
+      </div>
+      <div class="reveal">
+        <div class="kicker">PLAN</div>
+        <h3>计划，不是另一份清单</h3>
+        <p>待办可以挂回某篇笔记、指定协作人、设置截止与提醒；日历同时显示农历和二十四节气，倒数日与习惯打卡各就各位。</p>
+        <ul class="points">
+          <li><span><b>待办</b>：清单、优先级、四象限、截止时间、提醒、关联笔记与协作人。</span></li>
+          <li><span><b>日历</b>：公历 + 农历 + 节气，事件一目了然。</span></li>
+          <li><span><b>习惯</b>：每周目标、连续天数、21 天打卡记录。</span></li>
+          <li><span><b>专注</b>：番茄钟与倒数日，把节奏留在同一个界面。</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="showcase" id="contacts">
+      <div class="visual reveal">
+        <div class="duo">
+          <div class="shot"><img src="screenshots/05_contacts_detail.png" alt="联系人详情：部门、职位、项目、相关笔记与最近互动"></div>
+          <div class="shot"><img src="screenshots/06_contacts_org.png" alt="通讯录组织架构树"></div>
+        </div>
+        <div class="shot-cap">联系人详情 · 组织架构树</div>
+      </div>
+      <div class="reveal">
+        <div class="kicker">PEOPLE</div>
+        <h3>人脉，不该散落在手机里</h3>
+        <p>按部门路径自动生成组织树，点开就是完整名片；生日、最近互动、关联笔记都在一页里。</p>
+        <ul class="points">
+          <li><span><b>全字段搜索</b>：姓名、部门、职位、项目、电话、邮箱、备注、上级、微信、生日。</span></li>
+          <li><span><b>组织架构</b>：部门树显示人数，成员按姓名排序。</span></li>
+          <li><span><b>关系维护</b>：生日 7 天提醒、互动计数、收藏与快捷复制。</span></li>
+          <li><span><b>可迁移</b>：vCard / CSV 导入导出，换机不丢联系人。</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ai" style="padding-top:0">
+  <div class="wrap">
+    <div class="ai-band">
+      <div class="showcase" style="border:0;padding:0;grid-template-columns:1.02fr .98fr">
+        <div class="reveal">
+          <div class="kicker" style="color:var(--violet)">AI, WITH CONTEXT</div>
+          <h3>AI 不只会聊天，<br>它读得到你的上下文</h3>
+          <p>当前笔记、全库检索、关联联系人、未完成待办，都会成为 AI 的参考。它可以在聊天里直接搜索笔记、创建待办、把相关人员关联到笔记。</p>
+          <div class="mini-grid">
+            <div class="mini"><b>聊天</b><span>当前笔记或全库 RAG，流式回复</span></div>
+            <div class="mini"><b>整理</b><span>结构化成稿，一键应用回笔记</span></div>
+            <div class="mini"><b>报告</b><span>周报 / 月报 / 复盘，可导出 HTML</span></div>
+            <div class="mini"><b>Agent</b><span>多步任务，调用笔记与通讯录工具</span></div>
+          </div>
+          <div class="themes" style="margin-top:18px">
+            <span class="theme-pill">Ollama 本地</span><span class="theme-pill">OpenAI</span><span class="theme-pill">DeepSeek</span><span class="theme-pill">SiliconFlow</span><span class="theme-pill">智谱</span><span class="theme-pill">Gemini</span>
+          </div>
+        </div>
+        <div class="visual reveal">
+          <div class="shot"><img src="screenshots/07_ai_panel.png" alt="AI 面板：聊天、整理、报告、Agent 四个标签"></div>
+          <div class="shot-cap">AI 面板 · 只在主动点击时运行</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="security" style="padding-top:20px">
+  <div class="wrap">
+    <div class="security">
+      <div class="shield reveal">
+        <div class="ring"></div><div class="ring"></div>
+        <div class="glyph">🔒</div>
+      </div>
+      <div class="reveal">
+        <div class="eyebrow">Local first</div>
+        <h2 style="margin-top:12px">数据先属于你，<br>再谈功能</h2>
+        <p class="section-lede">所有内容默认存在本机 SQLite，不上传、不注册、不订阅。需要时再开启应用锁或整库加密。</p>
+        <div class="sec-grid" style="margin-top:26px">
+          <div class="sec"><b>本地 SQLite</b><span>笔记、待办、联系人同一数据库，离线可用</span></div>
+          <div class="sec"><b>每日自动备份</b><span>自动保留 7 份，可手动创建与恢复</span></div>
+          <div class="sec"><b>版本 + 回收站</b><span>误改可回滚，误删可恢复</span></div>
+          <div class="sec"><b>应用锁 + 加密</b><span>密码保护界面；退出时整库加密为 notes.vault</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="showcase" style="margin-top:40px;padding-top:56px">
+      <div class="visual reveal">
+        <div class="shot"><img src="screenshots/08_theme_warm.png" alt="暖阳主题下的主题指南笔记"></div>
+        <div class="shot-cap">暖阳主题 · 主题指南笔记</div>
+      </div>
+      <div class="reveal">
+        <div class="kicker">MAKE IT YOURS</div>
+        <h3>五套主题，和一只住在桌面的熊猫</h3>
+        <p>深空、暖阳、清新、森林、紫夜，一键切换。桌宠肚子上的三个按钮可以直接打开快速记录、计划与 AI；也可以完全关掉，保持安静。</p>
+        <div class="themes">
+          <span class="theme-pill"><i style="background:#0EA5E9"></i>深空</span>
+          <span class="theme-pill"><i style="background:#F59E0B"></i>暖阳</span>
+          <span class="theme-pill"><i style="background:#34D399"></i>清新</span>
+          <span class="theme-pill"><i style="background:#84CC16"></i>森林</span>
+          <span class="theme-pill"><i style="background:#A78BFA"></i>紫夜</span>
+        </div>
+        <ul class="points" style="margin-top:20px">
+          <li><span><b>Ctrl + Alt + N</b>：任何界面唤起快速记录</span></li>
+          <li><span><b>Ctrl + Alt + H</b>：显示 / 隐藏桌宠与悬浮窗</span></li>
+          <li><span><b>系统托盘</b>：常用入口常驻，不占任务栏</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="download-card reveal">
+      <div>
+        <div class="eyebrow">Download</div>
+        <h2 class="dl-title" style="margin-top:12px">装进 Windows，<br>今天就开始第二大脑</h2>
+        <p class="dl-sub">双击 MSI 即可安装，无需管理员权限；覆盖安装保留数据，卸载也不会删除笔记。</p>
+        <div class="dl-meta">
+          <span>版本 1.00</span><span>Windows 10 / 11 x64</span><span>约 461 MB</span><span>无需 Python</span><span>卸载保留数据</span>
+        </div>
+        <a class="btn btn-primary" href="https://github.com/liuxiaosheng85/suixin-site/releases/latest/download/SuiXinNotes-Setup-1.00.msi" download>⬇ 下载 随心笔记 1.00（MSI）</a>
+        <a class="btn btn-ghost" href="manual.html" style="margin-left:10px">📖 查看使用手册</a>
+        <div class="hash">
+          <span id="sha">SHA256 · 41AD6509098E80F886B6C2C71A596E34DF205DF3CC2FCA629154822324EB43FC</span>
+          <button id="copySha" type="button">复制</button>
+        </div>
+        <div class="note">安装包暂未代码签名，首次运行 Windows 可能提示「未知发布者」。点「更多信息 → 仍要运行」即可；校验 SHA256 可确认文件未被篡改。</div>
+      </div>
+      <div>
+        <div style="font-size:12px;letter-spacing:1.5px;color:var(--emerald);font-weight:700;margin-bottom:14px">安装步骤</div>
+        <ol class="steps">
+          <li><span>下载并双击 <b>SuiXinNotes-Setup-1.00.msi</b></span></li>
+          <li><span>接受许可协议，选择安装目录（默认当前用户）</span></li>
+          <li><span>从开始菜单或桌面启动，首次启动约 5–6 秒</span></li>
+        </ol>
+        <div style="font-size:12px;letter-spacing:1.5px;color:var(--emerald);font-weight:700;margin:26px 0 12px">系统要求</div>
+        <ul class="req">
+          <li>Windows 10 1809+ 或 Windows 11，64 位</li>
+          <li>WebView2 运行时（Win11 自带，Win10 通常随 Edge 已有）</li>
+          <li>磁盘约 1.5 GB，内存建议 8 GB 以上</li>
+          <li>AI 功能需本机 Ollama 或在线 API Key（可选）</li>
+        </ul>
+        <div style="font-size:11.5px;color:#7F90A6;margin-top:20px">数据位置：%LOCALAPPDATA%\SuiXinNotes\data</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head reveal" style="text-align:center;margin-bottom:34px">
+      <div class="eyebrow" style="justify-content:center">FAQ</div>
+      <h2>安装前，你可能想知道</h2>
+    </div>
+    <div class="faq">
+      <details class="reveal"><summary>AI 功能是免费的吗？需要联网吗？</summary><p>软件本身不收费。AI 可以接本地 Ollama（免费、离线，需自行安装并下载模型），也可以接 OpenAI、DeepSeek、SiliconFlow、智谱、Gemini 等在线服务，费用由对应服务商收取。没有配置 AI 时，笔记、计划、通讯录等核心功能完全可用。</p></details>
+      <details class="reveal"><summary>我的笔记存在哪里？卸载会丢吗？</summary><p>安装版存在 <b>%LOCALAPPDATA%\SuiXinNotes\data</b>。卸载只删除程序，不删除这个目录；重新安装后数据仍在。换电脑可复制整个 data 目录，或用备份文件恢复。</p></details>
+      <details class="reveal"><summary>为什么第一次启动比较慢？</summary><p>首次需要初始化数据库、界面缓存和本地组件，通常 5–6 秒；之后启动约 3 秒。若长时间停在「正在连接」，检查是否有安全软件拦截，或查看 data\app.log。</p></details>
+      <details class="reveal"><summary>安装时提示「未知发布者」怎么办？</summary><p>当前安装包未购买代码签名证书，Windows SmartScreen 会提示。点「更多信息 → 仍要运行」即可。可用页面上的 SHA256 校验安装包完整性。</p></details>
+      <details class="reveal"><summary>可以只导出部分笔记吗？</summary><p>可以。单篇笔记支持导出 HTML，文件生成在 data\exports 并自动打开目录；回收站、版本历史也支持单篇恢复。</p></details>
+      <details class="reveal"><summary>支持多台电脑同步吗？</summary><p>1.00 以本地单机为主，不内置云同步。可以通过复制 data 目录或备份文件在电脑之间迁移；后续版本会评估同步方案。</p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="brand"><span class="mark" style="width:22px;height:22px;border-radius:7px;font-size:12px">✦</span> 随心笔记 ✦ FreeMind 1.00</div>
+    <div class="foot-links">
+      <a href="#features">功能</a><a href="#download">下载</a><a href="#faq">FAQ</a><a href="manual.html">使用手册</a>
+    </div>
+    <div>© 2026 随心笔记 · Windows 本地优先</div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>8)},{passive:true});
+
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+document.getElementById('copySha').addEventListener('click',async()=>{
+  const txt=document.getElementById('sha').textContent.replace('SHA256 · ','').trim();
+  try{await navigator.clipboard.writeText(txt);const b=document.getElementById('copySha');b.textContent='已复制';setTimeout(()=>b.textContent='复制',1500);}catch(e){}
+});
+
+// 图片加载失败时给出可见提示，便于本地检查路径
+document.querySelectorAll('img').forEach(img=>{
+  img.addEventListener('error',()=>{img.style.minHeight='120px';img.alt='图片加载失败：'+img.getAttribute('src');});
+});
+</script>
+</body>
+</html>
