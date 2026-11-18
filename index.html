@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>随心笔记 ✦ FreeMind 1.01 — 你的 Windows 第二大脑</title>
+<title>随心笔记 ✦ FreeMind 1.02 — 你的 Windows 第二大脑</title>
 <meta name="description" content="随心笔记 FreeMind：把笔记、计划、通讯录和 AI 收进一张桌面。本地优先、每日备份、无订阅，Windows 10/11 一键安装。">
 <style>
 :root{
@@ -291,6 +291,11 @@ footer{border-top:1px solid var(--line);padding:40px 0 54px;color:#7F90A6;font-s
 .foot .brand{display:flex;align-items:center;gap:9px;color:#CBD8E8;font-weight:600}
 .foot-links{display:flex;gap:18px}
 .foot a:hover{color:var(--text)}
+.foot-contact{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+.foot-qr{display:flex;align-items:center;gap:10px;background:rgba(15,23,42,.6);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.foot-qr img{width:46px;height:46px;border-radius:8px;display:block}
+.foot-qr b{display:block;color:#DCE6F2;font-size:12px}
+.foot-qr span{display:block;font-size:11px;color:#7F90A6;margin-top:2px}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
@@ -343,7 +348,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 54px;color:#7F90A6;font-s
       <a href="#faq">FAQ</a>
       <a href="manual.html">手册</a>
     </div>
-    <a class="nav-cta" href="#download">下载 1.01</a>
+    <a class="nav-cta" href="#download">下载 1.02</a>
   </div>
 </nav>
 
@@ -351,7 +356,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 54px;color:#7F90A6;font-s
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <div class="badge"><span class="dot"></span> v1.01 初版 · Windows 10 / 11</div>
+        <div class="badge"><span class="dot"></span> v1.02 初版 · Windows 10 / 11</div>
         <h1>把想法、计划、人脉<br>和 AI <span class="grad">收进一张桌面</span></h1>
         <p class="lede">随心笔记 FreeMind 是一个本地优先的 Windows 笔记与工作台：写下的每一句话，都能连到任务、联系人和下一步行动。</p>
         <div class="hero-actions">
@@ -544,12 +549,12 @@ footer{border-top:1px solid var(--line);padding:40px 0 54px;color:#7F90A6;font-s
         <p class="dl-sub">双击 MSI 即可安装，无需管理员权限；覆盖安装保留数据，卸载也不会删除笔记。</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 2px;padding:12px 14px;border:1px solid rgba(52,211,153,.28);background:rgba(52,211,153,.07);border-radius:12px;font-size:13px;color:#C9D6E6"><b style="color:#34D399">30 天免费试用</b><span>试用结束后核心笔记功能仍免费，AI 与导出需授权解锁</span></div>
         <div class="dl-meta">
-          <span>版本 1.01</span><span>Windows 10 / 11 x64</span><span>约 461 MB</span><span>无需 Python</span><span>卸载保留数据</span>
+          <span>版本 1.02</span><span>Windows 10 / 11 x64</span><span>约 461 MB</span><span>无需 Python</span><span>卸载保留数据</span>
         </div>
-        <a class="btn btn-primary" href="https://github.com/liuxiaosheng85/suixin-site/releases/latest/download/SuiXinNotes-Setup-1.01.msi" download>⬇ 下载 随心笔记 1.01（MSI）</a>
+        <a class="btn btn-primary" href="https://github.com/liuxiaosheng85/suixin-site/releases/latest/download/SuiXinNotes-Setup-1.02.msi" download>⬇ 下载 随心笔记 1.02（MSI）</a>
         <a class="btn btn-ghost" href="manual.html" style="margin-left:10px">📖 查看使用手册</a>
         <div class="hash">
-          <span id="sha">SHA256 · 4173AE9A9980D8087FBB69B6C676724E828BACC432E550862BE825123AA249C2</span>
+          <span id="sha">SHA256 · BB938E0C8A3B0723F59EF8D99214E53B430D17C9F7B8F7DC27417D9FC3680EC7</span>
           <button id="copySha" type="button">复制</button>
         </div>
         <div class="note">安装包暂未代码签名，首次运行 Windows 可能提示「未知发布者」。点「更多信息 → 仍要运行」即可；校验 SHA256 可确认文件未被篡改。</div>
@@ -557,7 +562,7 @@ footer{border-top:1px solid var(--line);padding:40px 0 54px;color:#7F90A6;font-s
       <div>
         <div style="font-size:12px;letter-spacing:1.5px;color:var(--emerald);font-weight:700;margin-bottom:14px">安装步骤</div>
         <ol class="steps">
-          <li><span>下载并双击 <b>SuiXinNotes-Setup-1.01.msi</b></span></li>
+          <li><span>下载并双击 <b>SuiXinNotes-Setup-1.02.msi</b></span></li>
           <li><span>接受许可协议，选择安装目录（默认当前用户）</span></li>
           <li><span>从开始菜单或桌面启动，首次启动约 5–6 秒</span></li>
         </ol>
@@ -586,18 +591,24 @@ footer{border-top:1px solid var(--line);padding:40px 0 54px;color:#7F90A6;font-s
       <details class="reveal"><summary>为什么第一次启动比较慢？</summary><p>首次需要初始化数据库、界面缓存和本地组件，通常 5–6 秒；之后启动约 3 秒。若长时间停在「正在连接」，检查是否有安全软件拦截，或查看 data\app.log。</p></details>
       <details class="reveal"><summary>安装时提示「未知发布者」怎么办？</summary><p>当前安装包未购买代码签名证书，Windows SmartScreen 会提示。点「更多信息 → 仍要运行」即可。可用页面上的 SHA256 校验安装包完整性。</p></details>
       <details class="reveal"><summary>可以只导出部分笔记吗？</summary><p>可以。单篇笔记支持导出 HTML，文件生成在 data\exports 并自动打开目录；回收站、版本历史也支持单篇恢复。</p></details>
-      <details class="reveal"><summary>支持多台电脑同步吗？</summary><p>1.01 以本地单机为主，不内置云同步。可以通过复制 data 目录或备份文件在电脑之间迁移；后续版本会评估同步方案。</p></details>
+      <details class="reveal"><summary>支持多台电脑同步吗？</summary><p>1.02 以本地单机为主，不内置云同步。可以通过复制 data 目录或备份文件在电脑之间迁移；后续版本会评估同步方案。</p></details>
+      <details class="reveal"><summary>试用到期后如何续费或联系开发者？</summary><p>打开 <b>设置 → 授权</b>，在「关注开发者」区扫码关注：抖音「晓笙同学」（27808328919，关注后私信「续费」）或微信公众号「晚笙AGI」（关注后回复「续费」）。提供机器码和订单号/邮箱即可续期，收到新的 .sxlic 后粘贴激活。试用到期只影响 AI 与导出，笔记等基础功能一直免费。</p></details>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap foot">
-    <div class="brand"><span class="mark" style="width:22px;height:22px;border-radius:7px;font-size:12px">✦</span> 随心笔记 ✦ FreeMind 1.01</div>
+    <div class="brand"><span class="mark" style="width:22px;height:22px;border-radius:7px;font-size:12px">✦</span> 随心笔记 ✦ FreeMind 1.02</div>
     <div class="foot-links">
       <a href="#features">功能</a><a href="#download">下载</a><a href="#faq">FAQ</a><a href="manual.html">使用手册</a>
     </div>
     <div>© 2026 随心笔记 · Windows 本地优先</div>
+  </div>
+<div class="wrap foot-contact">
+<div class="foot-contact-head"><b>关注开发者</b><span>关注抖音 / 公众号，获取更新、续费与技术支持</span></div>
+<div class="foot-qr"><img src="contact/douyin_qr.jpg" alt="抖音二维码"><div><b>抖音 · 晓笙同学</b><span>关注后私信「续费」或反馈问题</span></div></div>
+<div class="foot-qr"><img src="contact/wechat_qr.jpg" alt="微信公众号二维码"><div><b>公众号 · 晚笙AGI</b><span>关注获取更新与联系入口</span></div></div>
   </div>
 </footer>
 
